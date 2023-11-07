@@ -49,7 +49,7 @@ class TextRankTests: XCTestCase {
         XCTAssertEqual(textRank.graph.edges.count, 2)
 
         text = "Dog cat bird. Sheep dog cat peacock. Horse cow fish dog chicken."
-        textRank.text = text
+        textRank.pages = [text]
         textRank.buildGraph()
         XCTAssertEqual(textRank.graph.nodes.count, 3)
         XCTAssertEqual(textRank.graph.edges.count, 3)
