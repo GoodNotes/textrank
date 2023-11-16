@@ -13,6 +13,12 @@ public class TextRank {
             textToSentences()
         }
     }
+    
+    public var chunks: [[String]] = [[String]]() {
+        didSet {
+            chunksToSentences()
+        }
+    }
 
     public var graph: TextGraph
     public var sentences = [Sentence]()
@@ -35,6 +41,12 @@ public class TextRank {
         textToSentences()
     }
 
+    public init(chunksPerPage: [[String]]) {
+        self.chunks = chunksPerPage
+        graph = TextGraph(damping: graphDamping)
+        chunksToSentences()
+    }
+
     public init(text: String) {
         self.pages = [text]
         graph = TextGraph(damping: graphDamping)
@@ -47,6 +59,21 @@ public class TextRank {
         self.graphDamping = graphDamping
         graph = TextGraph(damping: graphDamping)
         textToSentences()
+    }
+
+    func chunksToSentences() {
+        sentences = []
+        for (pageIndex, pageChunks) in chunks.enumerated() {
+            for (chunkIndex, chunk) in pageChunks.enumerated() {
+                sentences.append(
+                    Sentence(text: chunk.trimmingCharacters(in: .whitespacesAndNewlines),
+                             originalTextIndex: chunkIndex,
+                             pageIndex: pageIndex,
+                             additionalStopwords: stopwords)
+                )
+                
+            }
+        }
     }
 
     func textToSentences() {
