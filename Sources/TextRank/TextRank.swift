@@ -8,13 +8,13 @@
 import Foundation
 
 public class TextRank {
-    public var pages: [String] = [String]() {
+    public var pages: [(pageId: String, chunks: String)] = [(pageId: String, chunks: String)]() {
         didSet {
             textToSentences()
         }
     }
     
-    public var chunks: [[String]] = [[String]]() {
+    public var chunks: [(pageId: String, chunks: [String])] = [(pageId: String, chunks: [String])]() {
         didSet {
             chunksToSentences()
         }
@@ -31,30 +31,30 @@ public class TextRank {
     }
 
     public init() {
-        pages = [""]
+        pages = [("", "")]
         graph = TextGraph(damping: graphDamping)
     }
 
-    public init(pages: [String]) {
+    public init(pages: [(pageId: String, chunks: String)]) {
         self.pages = pages
         graph = TextGraph(damping: graphDamping)
         textToSentences()
     }
-
-    public init(chunksPerPage: [[String]]) {
+    
+    public init(chunksPerPage: [(pageId: String, chunks: [String])]) {
         self.chunks = chunksPerPage
         graph = TextGraph(damping: graphDamping)
         chunksToSentences()
     }
 
     public init(text: String) {
-        self.pages = [text]
+        self.pages = [("", text)]
         graph = TextGraph(damping: graphDamping)
         textToSentences()
     }
 
     public init(text: String, summarizationFraction: Float = 0.2, graphDamping: Float = 0.85) {
-        self.pages = [text]
+        self.pages = [("", text)]
         self.summarizationFraction = summarizationFraction
         self.graphDamping = graphDamping
         graph = TextGraph(damping: graphDamping)
@@ -63,23 +63,22 @@ public class TextRank {
 
     func chunksToSentences() {
         sentences = []
-        for (pageIndex, pageChunks) in chunks.enumerated() {
+        for (pageId, pageChunks) in chunks {
             for (chunkIndex, chunk) in pageChunks.enumerated() {
                 sentences.append(
                     Sentence(text: chunk.trimmingCharacters(in: .whitespacesAndNewlines),
                              originalTextIndex: chunkIndex,
-                             pageIndex: pageIndex,
+                             pageID: pageId,
                              additionalStopwords: stopwords)
                 )
-                
             }
         }
     }
 
     func textToSentences() {
         sentences = [];
-        for (pageIndex, page) in pages.enumerated() {
-            sentences.append(contentsOf: TextRank.splitIntoSentences(page, pageIndex: pageIndex, additionalStopwords: stopwords).filter { $0.length > 0 })
+        for (pageId, page) in pages {
+            sentences.append(contentsOf: TextRank.splitIntoSentences(page, pageID: pageId, additionalStopwords: stopwords).filter { $0.length > 0 })
         }
     }
 }
@@ -123,7 +122,7 @@ extension TextRank {
     /// Split text into sentences.
     /// - Parameter text: Original text.
     /// - Returns: An array of sentences.
-    static func splitIntoSentences(_ text: String, pageIndex: Int = 0, additionalStopwords stopwords: [String] = [String]()) -> [Sentence] {
+    static func splitIntoSentences(_ text: String, pageID: String = "", additionalStopwords stopwords: [String] = [String]()) -> [Sentence] {
         if text.isEmpty { return [] }
 
         var x = [Sentence]()
@@ -132,7 +131,7 @@ extension TextRank {
                 x.append(
                     Sentence(text: substring.trimmingCharacters(in: .whitespacesAndNewlines),
                              originalTextIndex: x.count,
-                             pageIndex: pageIndex,
+                             pageID: pageID,
                              additionalStopwords: stopwords)
                 )
             }

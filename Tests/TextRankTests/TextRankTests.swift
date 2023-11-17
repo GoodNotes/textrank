@@ -43,38 +43,48 @@ class TextRankTests: XCTestCase {
 
     func testCreatingSentencesFromChunks() {
         let testChunks = [
-            [
-                "Unveilin"
-            ],
-            [
-                "Table of content\nTable of content 2 Introduction 3 The Historical Importance of \"Romeo and Juliet\" 3 The Year and Time of Creation 3 The Author: William Shakespeare 3 Part One: Exploring \"Romeo and Juliet\" 4 Chapter 1: The Feuding Families of Verona 4 Chapter 2: Love Blossoms Amidst Conflict 4 Chapter 3: A Secret Union of Hearts 5 Chapter 4: A Duel\'s Dark Consequences 5 Chapter 5: Love Tested by Separation 6 Chapter 6: A Friar\'s Bold Plan Unfolds 6 Chapter 7: Missteps and Fateful Discoveries 7 ", 
-                "Chapter 8: A Sleep of Death 7 Chapter 9: The Tragic Farewell 8 Overview 8 Possible Exam Questions and Answers 10\n2"
-            ],
-            [
-                "Introduction\nWelcome to the world of \"Romeo and Juliet,\" a literary gem that has captivated hearts for centuries. In this study guide, we\'ll journey through the pages of this remarkable work by William Shakespeare, exploring its historical importance, the year and time of its creation, and why it continues to be celebrated as one of the greatest literary achievements of all time.\n", 
-                "The Historical Importance of \"Romeo and Juliet\"\n\"Romeo and Juliet\" is not just a play; it\'s a cultural touchstone that has left an indelible mark on literature, theater, and society. Written during the Renaissance period in England, between 1594 and 1596, this tragic love story emerged during a time of immense creativity and innovation. It was a time when art, science, and exploration flourished, and Shakespeare\'s works played a pivotal role in shaping the literary landscape of the era.\n", 
-                "The Year and Time of Creation\nImagine the cobblestone streets of Elizabethan England, a bustling setting where the ink flowed freely from quills onto parchment. It was during this vibrant period that Shakespeare penned \"Romeo and Juliet.\" While the exact year of its composition remains debated, it is widely believed to have been written around 1595. The play\'s timeless themes of love, conflict, and fate resonated then, just as they continue to resonate today.\n",
-                "The Author: William Shakespeare\nAt the heart of this enduring masterpiece stands the genius of William Shakespeare, a playwright and poet whose literary contributions have left an indelible impact on human culture. Born in 1564, Shakespeare crafted stories that transcend time and language barriers. ",
-                "His ability to delve into the complexities of human nature, his skill in capturing the range of human emotions, and his knack for weaving captivating narratives have solidified his place as one of history\'s greatest storytellers.\n",
-                "\"Romeo and Juliet\" stands as a testament to Shakespeare\'s unparalleled craftsmanship. As we embark on this journey through the play\'s pages, let us marvel at its historical significance, appreciate the genius of its creator, and discover why this timeless tale of love and tragedy continues to resonate with readers and audiences across the world.\n3"
-            ]
+            (
+                pageId: "0123",
+                chunks: [
+                    "Unveilin"
+                ]
+            ),
+            (
+                pageId: "4567",
+                chunks: [
+                    "Table of content\nTable of content 2 Introduction 3 The Historical Importance of \"Romeo and Juliet\" 3 The Year and Time of Creation 3 The Author: William Shakespeare 3 Part One: Exploring \"Romeo and Juliet\" 4 Chapter 1: The Feuding Families of Verona 4 Chapter 2: Love Blossoms Amidst Conflict 4 Chapter 3: A Secret Union of Hearts 5 Chapter 4: A Duel\'s Dark Consequences 5 Chapter 5: Love Tested by Separation 6 Chapter 6: A Friar\'s Bold Plan Unfolds 6 Chapter 7: Missteps and Fateful Discoveries 7 ",
+                    "Chapter 8: A Sleep of Death 7 Chapter 9: The Tragic Farewell 8 Overview 8 Possible Exam Questions and Answers 10\n2"
+                ]
+            ),
+            (
+                pageId: "7890",
+                chunks: [
+                    "Introduction\nWelcome to the world of \"Romeo and Juliet,\" a literary gem that has captivated hearts for centuries. In this study guide, we\'ll journey through the pages of this remarkable work by William Shakespeare, exploring its historical importance, the year and time of its creation, and why it continues to be celebrated as one of the greatest literary achievements of all time.\n",
+                    "The Historical Importance of \"Romeo and Juliet\"\n\"Romeo and Juliet\" is not just a play; it\'s a cultural touchstone that has left an indelible mark on literature, theater, and society. Written during the Renaissance period in England, between 1594 and 1596, this tragic love story emerged during a time of immense creativity and innovation. It was a time when art, science, and exploration flourished, and Shakespeare\'s works played a pivotal role in shaping the literary landscape of the era.\n",
+                    "The Year and Time of Creation\nImagine the cobblestone streets of Elizabethan England, a bustling setting where the ink flowed freely from quills onto parchment. It was during this vibrant period that Shakespeare penned \"Romeo and Juliet.\" While the exact year of its composition remains debated, it is widely believed to have been written around 1595. The play\'s timeless themes of love, conflict, and fate resonated then, just as they continue to resonate today.\n",
+                    "The Author: William Shakespeare\nAt the heart of this enduring masterpiece stands the genius of William Shakespeare, a playwright and poet whose literary contributions have left an indelible impact on human culture. Born in 1564, Shakespeare crafted stories that transcend time and language barriers. ",
+                    "His ability to delve into the complexities of human nature, his skill in capturing the range of human emotions, and his knack for weaving captivating narratives have solidified his place as one of history\'s greatest storytellers.\n",
+                    "\"Romeo and Juliet\" stands as a testament to Shakespeare\'s unparalleled craftsmanship. As we embark on this journey through the play\'s pages, let us marvel at its historical significance, appreciate the genius of its creator, and discover why this timeless tale of love and tragedy continues to resonate with readers and audiences across the world.\n3"
+                ]
+            )
         ]
-        let textRank = TextRank(chunks: testChunks)
+        
+        let textRank = TextRank(chunksPerPage: testChunks)
         print(textRank)
-        XCTAssertEqual(textRank.sentences[0].text, testChunks[0][0].trimmingCharacters(in: .whitespacesAndNewlines))
-        XCTAssertEqual(textRank.sentences[0].pageIndex, 0)
+        XCTAssertEqual(textRank.sentences[0].text, testChunks[0].chunks[0].trimmingCharacters(in: .whitespacesAndNewlines))
+        XCTAssertEqual(textRank.sentences[0].pageID, "0123")
         XCTAssertEqual(textRank.sentences[0].originalTextIndex, 0)
 
-        XCTAssertEqual(textRank.sentences[1].text, testChunks[1][0].trimmingCharacters(in: .whitespacesAndNewlines))
-        XCTAssertEqual(textRank.sentences[1].pageIndex, 1)
+        XCTAssertEqual(textRank.sentences[1].text, testChunks[1].chunks[0].trimmingCharacters(in: .whitespacesAndNewlines))
+        XCTAssertEqual(textRank.sentences[1].pageID, "4567")
         XCTAssertEqual(textRank.sentences[1].originalTextIndex, 0)
 
-        XCTAssertEqual(textRank.sentences[2].text, testChunks[1][1].trimmingCharacters(in: .whitespacesAndNewlines))
-        XCTAssertEqual(textRank.sentences[2].pageIndex, 1)
+        XCTAssertEqual(textRank.sentences[2].text, testChunks[1].chunks[1].trimmingCharacters(in: .whitespacesAndNewlines))
+        XCTAssertEqual(textRank.sentences[2].pageID, "4567")
         XCTAssertEqual(textRank.sentences[2].originalTextIndex, 1)
 
-        XCTAssertEqual(textRank.sentences[8].text, testChunks[2][5].trimmingCharacters(in: .whitespacesAndNewlines))
-        XCTAssertEqual(textRank.sentences[8].pageIndex, 2)
+        XCTAssertEqual(textRank.sentences[8].text, testChunks[2].chunks[5].trimmingCharacters(in: .whitespacesAndNewlines))
+        XCTAssertEqual(textRank.sentences[8].pageID, "7890")
         XCTAssertEqual(textRank.sentences[8].originalTextIndex, 5)
     }
 
@@ -86,7 +96,7 @@ class TextRankTests: XCTestCase {
         XCTAssertEqual(textRank.graph.edges.count, 2)
 
         text = "Dog cat bird. Sheep dog cat peacock. Horse cow fish dog chicken."
-        textRank.pages = [text]
+        textRank.pages = [("0123", text)]
         textRank.buildGraph()
         XCTAssertEqual(textRank.graph.nodes.count, 3)
         XCTAssertEqual(textRank.graph.edges.count, 3)

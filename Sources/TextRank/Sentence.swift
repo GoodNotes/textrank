@@ -14,12 +14,12 @@ public struct Sentence: Hashable {
         words.count
     }
 
-    public let pageIndex: Int
+    public let pageID: String
     public let originalTextIndex: Int
 
-    public init(text: String, originalTextIndex: Int, pageIndex: Int = 0, additionalStopwords: [String] = [String]()) {
+    public init(text: String, originalTextIndex: Int, pageID: String = "", additionalStopwords: [String] = [String]()) {
         self.text = text
-        self.pageIndex = pageIndex
+        self.pageID = pageID
         self.originalTextIndex = originalTextIndex
         words = Sentence.removeStopWords(from: Sentence.clean(self.text),
                                          additionalStopwords: additionalStopwords)
