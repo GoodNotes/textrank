@@ -92,18 +92,17 @@ extension TextRank {
     /// Build the TextGraph using the sentences as nodes.
     func buildGraph() {
         graph.clearGraph()
-        var numberOfErrors = 0
+        
         for (i, s1) in sentences.enumerated() {
             for s2 in sentences[(i + 1) ..< sentences.count] {
-                do {
-                    try graph.addEdge(from: s1, to: s2, withWeight: similarity(s1, s2))
-                } catch {
-                    numberOfErrors += 1
+                let similarity = similarity(s1, s2)
+                if similarity > 0 {
+                    try? graph.addEdge(from: s1, to: s2, withWeight: similarity)
                 }
             }
         }
     }
-
+    
     /// Calculate the similarity of two senntences.
     /// - Parameters:
     ///   - a: First sentence.

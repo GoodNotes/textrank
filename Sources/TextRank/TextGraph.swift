@@ -47,17 +47,19 @@ public class TextGraph {
     ///   - a: First node.
     ///   - b: Second node.
     ///   - weight: Weight of the edge (default is 1). The edge weight must be greater than 0, else neither the nodes nor edge are added.
-    public func addEdge(from a: Sentence, to b: Sentence, withWeight weight: Float = 1.0) throws {
+    public func addEdge(
+        from a: Sentence,
+        to b: Sentence,
+        withWeight weight: Float = 1.0
+    ) throws {
         if weight <= 0 {
             throw TextGraphError.NonpositiveEdgeWeight(value: weight)
         }
-        if weight > 0 {
-            for n in [a, b] {
-                setValue(of: n)
-            }
-            setEdge(from: a, to: b, withWeight: weight)
-            setEdge(from: b, to: a, withWeight: weight)
+        for n in [a, b] {
+            setValue(of: n)
         }
+        setEdge(from: a, to: b, withWeight: weight)
+        setEdge(from: b, to: a, withWeight: weight)
     }
 
     /// Add a node.
